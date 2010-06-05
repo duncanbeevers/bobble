@@ -48,6 +48,29 @@ assertEquals(false, a, "Expected setTimeout not to have fired again after 250 si
 <script class="js-test" type="text/html">
 var a = false;
 
+advanceToTime(50);
+
+setInterval(
+  function() { a = true; },
+  100);
+
+advanceToTime(149);
+assertEquals(false, a, "Expected setInterval not to have fired after 149 simulated milliseconds");
+
+advanceToTime(150);
+assertEquals(true, a, "Expected setInterval to have fired after 150 simulated milliseconds");
+
+a = false;
+advanceToTime(249);
+assertEquals(false, a, "Expected setInterval not to have fired again after 249 simulated milliseconds");
+
+advanceToTime(250);
+assertEquals(true, a, "Expected setInterval to have fired again after 250 simulated milliseconds");
+</script>
+
+<script class="js-test" type="text/html">
+var a = false;
+
 setTimeout(
   function() { a = true; },
   100);

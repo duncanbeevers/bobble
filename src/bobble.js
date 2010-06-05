@@ -12,9 +12,21 @@ function Bobble(src) {
         fn: fn,
         ms: ms,
         lastFired: bobbleTime,
-        everFired: false
+        fireAgain: true
       });
       return cl.length;
+    };
+    
+    function advanceTc(collection, repeat) {
+      var tc;
+      for (var i = 0; i < collection.length; i++) {
+        tc = collection[i];
+        if (tc.fireAgain && bobbleTime - tc.lastFired >= tc.ms) {
+          tc.fn();
+          tc.lastFired = bobbleTime;
+          tc.fireAgain = repeat;
+        }
+      }
     };
     
     return {
@@ -24,16 +36,9 @@ function Bobble(src) {
         if (time < bobbleTime) {
           throw("Can't go back in time");
         } else {
-          var tc;
-          for (var i = 0; i < timeouts.length; i++) {
-            tc = timeouts[i];                      
-            if (!tc.everFired && time - tc.ms >= tc.lastFired) {
-              tc.fn();
-              tc.lastFired = time;
-              tc.everFired = true;
-            }
-          }
           bobbleTime = time;
+          advanceTc(timeouts, false); // events which don't repeat
+          advanceTc(intervals, true); // events which do repeat
         }
       }
     };
