@@ -116,14 +116,17 @@ var assertThrows = function(fn, message) {
 
 (function() {
   var failures = [];
+  var successes = [];
+  
   $$('.js-test').each(function(t) {
     try {
-      var bobble = new Bobble(t.innerHTML);
+      successes.push(new Bobble(t.innerHTML));
     } catch(e) {
       failures.push(e);
     }
   });
   
+  console.info("Successes: %o, Failures: %o", successes.length, failures.length);
   for (var i = 0; i < failures.length; i++) {
     console.error("Failure: %o", failures[i]);
   }
