@@ -28,9 +28,25 @@ assertThrows(function() {
 <script class="js-test" type="text/html">
 var a = false;
 
+advanceToTime(50);
+
 setTimeout(
   function() { a = true; },
-100);
+  100);
+
+advanceToTime(149);
+assertEquals(false, a, "Expected setTimeout not to have fired after 149 simulated milliseconds");
+
+advanceToTime(150);
+assertEquals(true, a, "Expected setTimeout to have fired after 150 simulated milliseconds");
+</script>
+
+<script class="js-test" type="text/html">
+var a = false;
+
+setTimeout(
+  function() { a = true; },
+  100);
 
 assertEquals(false, a, "Expected setTimeout not to have fired before advancing milliseconds");
 

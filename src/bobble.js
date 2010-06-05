@@ -11,7 +11,7 @@ function Bobble(src) {
       cl.push({
         fn: fn,
         ms: ms,
-        lastFired: 0
+        lastFired: bobbleTime
       });
       return cl.length;
     };
@@ -23,6 +23,14 @@ function Bobble(src) {
         if (time < bobbleTime) {
           throw("Can't go back in time");
         } else {
+          var tc;
+          for (var i = 0; i < timeouts.length; i++) {
+            tc = timeouts[i];                      
+            if (time - tc.ms >= tc.lastFired) {
+              tc.fn();
+              tc.lastFired = time;
+            }
+          }
           bobbleTime = time;
         }
       }
