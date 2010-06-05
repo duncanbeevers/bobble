@@ -39,6 +39,10 @@ assertEquals(false, a, "Expected setTimeout not to have fired after 149 simulate
 
 advanceToTime(150);
 assertEquals(true, a, "Expected setTimeout to have fired after 150 simulated milliseconds");
+
+a = false;
+advanceToTime(250);
+assertEquals(false, a, "Expected setTimeout not to have fired again after 250 simulated milliseconds");
 </script>
 
 <script class="js-test" type="text/html">

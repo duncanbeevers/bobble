@@ -11,7 +11,8 @@ function Bobble(src) {
       cl.push({
         fn: fn,
         ms: ms,
-        lastFired: bobbleTime
+        lastFired: bobbleTime,
+        everFired: false
       });
       return cl.length;
     };
@@ -26,9 +27,10 @@ function Bobble(src) {
           var tc;
           for (var i = 0; i < timeouts.length; i++) {
             tc = timeouts[i];                      
-            if (time - tc.ms >= tc.lastFired) {
+            if (!tc.everFired && time - tc.ms >= tc.lastFired) {
               tc.fn();
               tc.lastFired = time;
+              tc.everFired = true;
             }
           }
           bobbleTime = time;
