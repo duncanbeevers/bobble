@@ -2,10 +2,31 @@
 <html>
   <head>
     <title>Bobble Test</title>
+<style type="text/css">
+.js-test-result-status { padding: 10px; margin: 2px; }
+.js-test-result-status pre { padding: 0; margin: 0; }
+.js-test-result-status-success { background-color: #A0FFA0; max-height: 5px; overflow: hidden; }
+.js-test-result-status-success:hover { max-height: 1000px; }
+.js-test-result-status-success .js-test-failure-message { display: none; }
+.js-test-result-status-failure { background-color: #FF8080; }
+.js-test-result-status .js-test-failure-message { margin: 15px 10px 10px; font-weight: bold; }
+</style>
     <script type="text/javascript" language="JavaScript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
     <script type="text/javascript" language="JavaScript" src="../src/bobble.js"></script>
   </head>
   <body>
+
+<script class="js-test-result-template" type="text/html">
+<div class="js-test-result-status js-test-result-status-#{test_result}">
+  <pre>#{function_body}</pre>
+  <pre class="js-test-failure-message">#{failure_message}</pre>
+</div>
+</script>
+<script class="js-test-results-summary-template" type="text/html">
+<div class="js-test-results-summary">
+  <pre>#{successes} Successes, #{failures} Failures</pre>
+</div>
+</script>
 
 <script class="js-test" type="text/html">
 assertThrows(function() {
@@ -102,7 +123,6 @@ assertEquals(false, a, "Expected cleared setInterval not to have fired after 100
 
 
 
-
 <script type="text/javascript" language="JavaScript">
 var assertEquals = function(expected, actual, message) {
   if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
@@ -115,21 +135,36 @@ var assertThrows = function(fn, message) {
 };
 
 (function() {
+  var result_template = new Template($$('.js-test-result-template')[0].innerHTML);
+  var summary_template = new Template($$('.js-test-results-summary-template')[0].innerHTML);
   var failures = [];
   var successes = [];
+  var body = document.getElementsByTagName('body')[0];
   
-  $$('.js-test').each(function(t) {
-    try {
-      successes.push(new Bobble(t.innerHTML));
-    } catch(e) {
-      failures.push(e);
-    }
+  document.observe('dom:loaded', function() {
+    $$('.js-test').each(function(t) {
+      var template_env = {
+        function_body: t.innerHTML,
+        test_result: 'success'
+      };
+      
+      try {
+        new Bobble(t.innerHTML);
+        successes.push(t.innerHTML);
+      } catch(e) {
+        template_env.test_result = 'failure';
+        template_env.failure_message = e;
+        failures.push(e);
+      }
+      body.insert(result_template.evaluate(template_env));
+    });
+    
+    body.insert(summary_template.evaluate({
+      failures: failures.length,
+      successes: successes.length
+    }));
   });
   
-  console.info("Successes: %o, Failures: %o", successes.length, failures.length);
-  for (var i = 0; i < failures.length; i++) {
-    console.error("Failure: %o", failures[i]);
-  }
 })();
 
 </script>
