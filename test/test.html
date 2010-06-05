@@ -6,17 +6,6 @@
     <script type="text/javascript" language="JavaScript" src="../src/bobble.js"></script>
   </head>
   <body>
-<script type="text/javascript">
-var assertEquals = function(expected, actual, message) {
-  if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
-};
-
-var assertThrows = function(fn, message) {
-  var threw = false;
-  try { fn(); } catch(_) { threw = true; }
-  if (!threw) { throw(message || ("Expected " + fn + " to have thrown")); }
-};
-</script>
 
 <script class="js-test" type="text/html">
 assertThrows(function() {
@@ -85,17 +74,62 @@ assertEquals(true, a, "Expected setTimeout to have fired after 100 simulated mil
 </script>
 
 <script class="js-test" type="text/html">
-/* (function() { alert("Hi mom!"); })(); */
+var a = false;
+
+var timeout = setTimeout(
+  function() { a = true; },
+  100);
+
+clearTimeout(timeout);
+
+advanceToTime(100);
+assertEquals(false, a, "Expected cleared setTimeout not to have fired after 100 simulated milliseconds");
 </script>
 
-    <script type="text/javascript" language="JavaScript">
+<script class="js-test" type="text/html">
+var a = false;
+
+var interval = setInterval(
+  function() { a = true; },
+  100);
+
+clearInterval(interval);
+
+advanceToTime(100);
+assertEquals(false, a, "Expected cleared setInterval not to have fired after 100 simulated milliseconds");
+</script>
+
+
+
+
+
+<script type="text/javascript" language="JavaScript">
+var assertEquals = function(expected, actual, message) {
+  if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
+};
+
+var assertThrows = function(fn, message) {
+  var threw = false;
+  try { fn(); } catch(_) { threw = true; }
+  if (!threw) { throw(message || ("Expected " + fn + " to have thrown")); }
+};
 
 (function() {
+  var failures = [];
   $$('.js-test').each(function(t) {
-    var bobble = new Bobble(t.innerHTML);
+    try {
+      var bobble = new Bobble(t.innerHTML);
+    } catch(e) {
+      failures.push(e);
+    }
   });
+  
+  for (var i = 0; i < failures.length; i++) {
+    console.error("Failure: %o", failures[i]);
+  }
 })();
 
-    </script>
+</script>
+
   </body>
 </html>

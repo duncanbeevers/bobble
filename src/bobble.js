@@ -32,13 +32,15 @@ function Bobble(src) {
     return {
       setTimeout: function(fn, ms) { return tcPsh(timeouts, fn, ms); },
       setInterval: function(fn, ms) { return tcPsh(intervals, fn, ms); },
+      clearTimeout: function(id) { timeouts[id - 1].fireAgain = false; },
+      clearInterval: function(id) { intervals[id - 1].fireAgain = false; },
       advanceToTime: function(time) {
         if (time < bobbleTime) {
           throw("Can't go back in time");
         } else {
           bobbleTime = time;
-          advanceTc(timeouts, false); // events which don't repeat
-          advanceTc(intervals, true); // events which do repeat
+          advanceTc(timeouts, false); // timeouts which don't repeat
+          advanceTc(intervals, true); // intervals which do repeat
         }
       }
     };
@@ -47,12 +49,10 @@ function Bobble(src) {
   var setTimeout    = BobblePublicAPI.setTimeout;
   var clearTimeout  = BobblePublicAPI.clearTimeout;
   var setInterval   = BobblePublicAPI.setInterval;
-  var clearInterval = BobblePublicAPI.setInterval;
+  var clearInterval = BobblePublicAPI.clearInterval;
   var Date          = BobblePublicAPI.Date;
   var advanceToTime = BobblePublicAPI.advanceToTime;
   var alert = function(s) { console.log("alert: %o", s); };
   
   eval(src);
 };
-
-Bobble.prototype = {};
