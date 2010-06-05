@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bobble Test</title>
+    <script type="text/javascript" language="JavaScript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1.0/prototype.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../src/bobble.js"></script>
+  </head>
+  <body>
+<script type="text/javascript">
+var assertEquals = function(expected, actual, message) {
+  if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
+};
+
+var assertThrows = function(fn, message) {
+  var threw = false;
+  try { fn(); } catch(_) { threw = true; }
+  if (!threw) { throw(message || ("Expected " + fn + " to have thrown")); }
+};
+</script>
+
+<script class="js-test" type="text/html">
+assertThrows(function() {
+  advanceToTime(1);
+  advanceToTime(0);
+}, "Expected error to have been raised when attempting to rewind time");
+</script>
+
+<script class="js-test" type="text/html">
+var a = false;
+
+setTimeout(
+  function() { a = true; },
+100);
+
+assertEquals(false, a, "Expected setTimeout not to have fired before advancing milliseconds");
+
+advanceToTime(99);
+assertEquals(false, a, "Expected setTimeout not to have fired after 99 simulated milliseconds");
+
+advanceToTime(100);
+assertEquals(true, a, "Expected setTimeout to have fired after 100 simulated milliseconds");
+</script>
+
+<script class="js-test" type="text/html">
+/* (function() { alert("Hi mom!"); })(); */
+</script>
+
+    <script type="text/javascript" language="JavaScript">
+
+(function() {
+  $$('.js-test').each(function(t) {
+    var bobble = new Bobble(t.innerHTML);
+  });
+})();
+
+    </script>
+  </body>
+</html>
