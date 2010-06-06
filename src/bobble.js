@@ -2,8 +2,8 @@
   Bobble
   Simulated time environment for JavaScript
 */
-function Bobble(src) {
-  var BobblePublicAPI = (function() {
+function Bobble(originalDate, src) {
+  var BobblePublicAPI = (function(originalDate, src) {
     var bobbleTime = 0;
     var timeouts   = [];
     var intervals  = [];
@@ -29,6 +29,13 @@ function Bobble(src) {
       }
     };
     
+    var Date = function() {
+      var base = new originalDate(bobbleTime);
+      base.__proto__ = Date.prototype;
+      return base;
+    };
+    Date.prototype = { __proto__: originalDate.prototype, constructor: Date };
+    
     return {
       setTimeout: function(fn, ms) { return tcPsh(timeouts, fn, ms); },
       setInterval: function(fn, ms) { return tcPsh(intervals, fn, ms); },
@@ -42,9 +49,10 @@ function Bobble(src) {
           advanceTc(timeouts, false); // timeouts which don't repeat
           advanceTc(intervals, true); // intervals which do repeat
         }
-      }
+      },
+      Date: Date
     };
-  })();
+  }).apply(this, arguments);
   
   var setTimeout    = BobblePublicAPI.setTimeout;
   var clearTimeout  = BobblePublicAPI.clearTimeout;

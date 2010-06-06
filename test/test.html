@@ -120,8 +120,13 @@ advanceToTime(100);
 assertEquals(false, a, "Expected cleared setInterval not to have fired after 100 simulated milliseconds");
 </script>
 
-
-
+<script class="js-test" type="text/html">
+var then = new Date();
+advanceToTime(100);
+var now = new Date();
+assertEquals(100, now - then, "Expected bobble time to control Date");
+console.log("originalDate: %o", originalDate);
+</script>
 
 <script type="text/javascript" language="JavaScript">
 var assertEquals = function(expected, actual, message) {
@@ -149,7 +154,7 @@ var assertThrows = function(fn, message) {
       };
       
       try {
-        new Bobble(t.innerHTML);
+        new Bobble(Date, t.innerHTML);
         successes.push(t.innerHTML);
       } catch(e) {
         template_env.test_result = 'failure';
