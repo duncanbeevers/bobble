@@ -8,6 +8,8 @@
   </head>
   <body>
 
+
+
 <script class="js-test" type="text/html">
 // Time cannot go backwards
 assertThrows(function() {
@@ -16,6 +18,8 @@ assertThrows(function() {
 }, "Expected error to have been raised when attempting to rewind time");
 </script>
 
+
+
 <script class="js-test" type="text/html">
 // setTimeout does not fire early
 var a = false;
@@ -23,6 +27,8 @@ setTimeout(function() { a = true; }, 100);
 advanceToTime(99);
 assertEquals(false, a, "Expected setTimeout not to have fired early");
 </script>
+
+
 
 <script class="js-test" type="text/html">
 // setTimeout does not fire early relative to current time
@@ -33,6 +39,8 @@ advanceToTime(149);
 assertEquals(false, a, "Expected setTimeout not to have fired early");
 </script>
 
+
+
 <script class="js-test" type="text/html">
 // setTimeout fires relative to current time
 var a = false;
@@ -41,6 +49,8 @@ setTimeout( function() { a = true; }, 100);
 advanceToTime(150);
 assertEquals(true, a, "Expected setTimeout to have fired after elapsed time");
 </script>
+
+
 
 <script class="js-test" type="text/html">
 // setTimeout does not repeat
@@ -53,6 +63,8 @@ advanceToTime(200);
 assertEquals(false, a, "Expected setTimeout not to have fired again");
 </script>
 
+
+
 <script class="js-test" type="text/html">
 // setInterval repeats
 var a = false;
@@ -64,6 +76,8 @@ advanceToTime(200);
 assertEquals(true, a, "Expected setInterval to have fired again");
 </script>
 
+
+
 <script class="js-test" type="text/html">
 // clearTimeout clears
 var a = false;
@@ -72,6 +86,8 @@ clearTimeout(timeout);
 advanceToTime(100);
 assertEquals(false, a, "Expected cleared setTimeout not to have fired");
 </script>
+
+
 
 <script class="js-test" type="text/html">
 // clearInterval clears
@@ -85,6 +101,8 @@ advanceToTime(200);
 assertEquals(false, a, "Expected cleared setInterval not to have fired again");
 </script>
 
+
+
 <script class="js-test" type="text/html">
 // new Date() is controlled by bobble
 var then = new Date();
@@ -92,6 +110,8 @@ advanceToTime(100);
 var now = new Date();
 assertEquals(100, now - then, "Expected bobble time to control Date");
 </script>
+
+
 
 <script class="js-test" type="text/html">
 // Explicit Date constructor signatures work correctly
@@ -105,19 +125,21 @@ assertEquals(1278377813000, new Date(2010, 6, 5, 17, 56, 53));
 assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
 </script>
 
-<script class="js-test-result-template" type="text/html">
-<div class="js-test-result-status js-test-result-status-#{test_result}">
-  <pre>#{function_body}</pre>
-  <pre class="js-test-failure-message">#{failure_message}</pre>
-</div>
-</script>
-<script class="js-test-results-summary-template" type="text/html">
-<div class="js-test-results-summary">
-  <pre>#{successes} Successes, #{failures} Failures</pre>
-</div>
-</script>
 
-<script type="text/javascript" language="JavaScript" src="bobbled-tests-runner.js"></script>
 
+  <script class="js-test-result-template" type="text/html">
+  <div class="js-test-result-status js-test-result-status-#{test_result}">
+    <pre>#{function_body}</pre>
+    <pre class="js-test-failure-message">#{failure_message}</pre>
+  </div>
+  </script>
+  <script class="js-test-results-summary-template" type="text/html">
+  <div class="js-test-results-summary">
+    <pre>#{successes} Successes, #{failures} Failures</pre>
+  </div>
+  </script>
+  
+  <script type="text/javascript" language="JavaScript" src="bobbled-tests-runner.js"></script>
+  
   </body>
 </html>
