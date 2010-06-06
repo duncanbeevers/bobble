@@ -23,7 +23,7 @@ function assertThrows(fn, message) {
       };
       
       try {
-        new Bobble(Date, t.innerHTML);
+        new Bobble(t.innerHTML);
         successes.push(t.innerHTML);
       } catch(e) {
         template_env.test_result = 'failure';
