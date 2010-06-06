@@ -128,6 +128,17 @@ var now = new Date();
 assertEquals(100, now - then, "Expected bobble time to control Date");
 </script>
 
+<script class="js-test" type="text/html">
+assertEquals(1275785813010, new Date(1275785813010));
+assertEquals(1275785813000, new Date("2010-06-05 17:56:53 GMT-0700 (PDT)"));
+assertEquals(1277967600000, new Date(2010, 6));
+assertEquals(1278313200000, new Date(2010, 6, 5));
+assertEquals(1278374400000, new Date(2010, 6, 5, 17));
+assertEquals(1278377760000, new Date(2010, 6, 5, 17, 56));
+assertEquals(1278377813000, new Date(2010, 6, 5, 17, 56, 53));
+assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
+</script>
+
 <script type="text/javascript" language="JavaScript">
 var assertEquals = function(expected, actual, message) {
   if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
