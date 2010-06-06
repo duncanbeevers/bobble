@@ -30,16 +30,16 @@ function Bobble(originalDate, src) {
     };
     
     var Date = function() {
-      var base;
-      switch(arguments.length) {
+      var a = arguments, base;
+      switch(a.length) {
         case 0: base = new originalDate(bobbleTime); break;
-        case 1: base = new originalDate(arguments[0]); break;
-        case 2: base = new originalDate(arguments[0], arguments[1]); break;
-        case 3: base = new originalDate(arguments[0], arguments[1], arguments[2]); break;
-        case 4: base = new originalDate(arguments[0], arguments[1], arguments[2], arguments[3]); break;
-        case 5: base = new originalDate(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4]); break;
-        case 6: base = new originalDate(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]); break;
-        case 7: base = new originalDate(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6]);
+        case 1: base = new originalDate(a[0]); break;
+        case 2: base = new originalDate(a[0], a[1]); break;
+        case 3: base = new originalDate(a[0], a[1], a[2]); break;
+        case 4: base = new originalDate(a[0], a[1], a[2], a[3]); break;
+        case 5: base = new originalDate(a[0], a[1], a[2], a[3], a[4]); break;
+        case 6: base = new originalDate(a[0], a[1], a[2], a[3], a[4], a[5]); break;
+        case 7: base = new originalDate(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
       };
       base.__proto__ = Date.prototype;
       return base;
