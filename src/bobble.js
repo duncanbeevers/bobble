@@ -2,7 +2,7 @@
   Bobble
   Simulated time environment for JavaScript
 */
-var Bobble = (function(originalDate) {
+var Bobble = (function(global) {
   return function(src) {
     
     var BobblePublicAPI = (function(originalDate, src) {
@@ -64,7 +64,7 @@ var Bobble = (function(originalDate) {
         },
         Date: Date
       };
-    }).apply(this, Array.prototype.splice.call(arguments, 0).concat(originalDate));
+    }).apply(this, Array.prototype.splice.call(arguments, 0).concat(global.Date));
     
     var setTimeout    = BobblePublicAPI.setTimeout;
     var clearTimeout  = BobblePublicAPI.clearTimeout;
@@ -76,4 +76,4 @@ var Bobble = (function(originalDate) {
     
     eval(src);
   };
-})(Date);
+})(window);
