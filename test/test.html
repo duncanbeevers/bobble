@@ -123,9 +123,9 @@ assertEquals(false, a, "Expected cleared setInterval not to have fired after 100
 <script class="js-test" type="text/html">
 var then = new Date();
 advanceToTime(100);
+
 var now = new Date();
 assertEquals(100, now - then, "Expected bobble time to control Date");
-console.log("originalDate: %o", originalDate);
 </script>
 
 <script type="text/javascript" language="JavaScript">
