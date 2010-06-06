@@ -17,99 +17,84 @@ assertThrows(function() {
 </script>
 
 <script class="js-test" type="text/html">
+// setTimeout does not fire early
 var a = false;
-
-advanceToTime(50);
-
-setTimeout(
-  function() { a = true; },
-  100);
-
-advanceToTime(149);
-assertEquals(false, a, "Expected setTimeout not to have fired after 149 simulated milliseconds");
-
-advanceToTime(150);
-assertEquals(true, a, "Expected setTimeout to have fired after 150 simulated milliseconds");
-
-a = false;
-advanceToTime(250);
-assertEquals(false, a, "Expected setTimeout not to have fired again after 250 simulated milliseconds");
-</script>
-
-<script class="js-test" type="text/html">
-var a = false;
-
-advanceToTime(50);
-
-setInterval(
-  function() { a = true; },
-  100);
-
-advanceToTime(149);
-assertEquals(false, a, "Expected setInterval not to have fired after 149 simulated milliseconds");
-
-advanceToTime(150);
-assertEquals(true, a, "Expected setInterval to have fired after 150 simulated milliseconds");
-
-a = false;
-advanceToTime(249);
-assertEquals(false, a, "Expected setInterval not to have fired again after 249 simulated milliseconds");
-
-advanceToTime(250);
-assertEquals(true, a, "Expected setInterval to have fired again after 250 simulated milliseconds");
-</script>
-
-<script class="js-test" type="text/html">
-var a = false;
-
-setTimeout(
-  function() { a = true; },
-  100);
-
-assertEquals(false, a, "Expected setTimeout not to have fired before advancing milliseconds");
-
+setTimeout(function() { a = true; }, 100);
 advanceToTime(99);
-assertEquals(false, a, "Expected setTimeout not to have fired after 99 simulated milliseconds");
-
-advanceToTime(100);
-assertEquals(true, a, "Expected setTimeout to have fired after 100 simulated milliseconds");
+assertEquals(false, a, "Expected setTimeout not to have fired early");
 </script>
 
 <script class="js-test" type="text/html">
+// setTimeout does not fire early relative to current time
 var a = false;
+advanceToTime(50);
+setTimeout( function() { a = true; }, 100);
+advanceToTime(149);
+assertEquals(false, a, "Expected setTimeout not to have fired early");
+</script>
 
-var timeout = setTimeout(
-  function() { a = true; },
-  100);
+<script class="js-test" type="text/html">
+// setTimeout fires relative to current time
+var a = false;
+advanceToTime(50);
+setTimeout( function() { a = true; }, 100);
+advanceToTime(150);
+assertEquals(true, a, "Expected setTimeout to have fired after elapsed time");
+</script>
 
+<script class="js-test" type="text/html">
+// setTimeout does not repeat
+var a = false;
+setTimeout( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected setTimeout to have fired once");
+a = false;
+advanceToTime(200);
+assertEquals(false, a, "Expected setTimeout not to have fired again");
+</script>
+
+<script class="js-test" type="text/html">
+// setInterval repeats
+var a = false;
+setInterval( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected setInterval to have fired once");
+a = false;
+advanceToTime(200);
+assertEquals(true, a, "Expected setInterval to have fired again");
+</script>
+
+<script class="js-test" type="text/html">
+// clearTimeout clears
+var a = false;
+var timeout = setTimeout(function() { a = true; }, 100);
 clearTimeout(timeout);
-
 advanceToTime(100);
-assertEquals(false, a, "Expected cleared setTimeout not to have fired after 100 simulated milliseconds");
+assertEquals(false, a, "Expected cleared setTimeout not to have fired");
 </script>
 
 <script class="js-test" type="text/html">
+// clearInterval clears
 var a = false;
-
-var interval = setInterval(
-  function() { a = true; },
-  100);
-
-clearInterval(interval);
-
+var interval = setInterval(function() { a = true; }, 100);
 advanceToTime(100);
-assertEquals(false, a, "Expected cleared setInterval not to have fired after 100 simulated milliseconds");
+assertEquals(true, a, "Expected setInterval to have fired before clearing");
+a = false;
+clearInterval(interval);
+advanceToTime(200);
+assertEquals(false, a, "Expected cleared setInterval not to have fired again");
 </script>
 
 <script class="js-test" type="text/html">
+// new Date() is controlled by bobble
 var then = new Date();
 advanceToTime(100);
-
 var now = new Date();
 assertEquals(100, now - then, "Expected bobble time to control Date");
 </script>
 
 <script class="js-test" type="text/html">
+// Explicit Date constructor signatures work correctly
 assertEquals(1275785813010, new Date(1275785813010));
 assertEquals(1275785813000, new Date("2010-06-05 17:56:53 GMT-0700 (PDT)"));
 assertEquals(1277967600000, new Date(2010, 6));
