@@ -1,0 +1,7 @@
+.js-test-result-status { padding: 10px; margin: 2px; }
+.js-test-result-status pre { padding: 0; margin: 0; }
+.js-test-result-status-success { background-color: #A0FFA0; max-height: 5px; overflow: hidden; }
+.js-test-result-status-success:hover { max-height: 1000px; }
+.js-test-result-status-success .js-test-failure-message { display: none; }
+.js-test-result-status-failure { background-color: #FF8080; }
+.js-test-result-status .js-test-failure-message { margin: 15px 10px 10px; font-weight: bold; }
