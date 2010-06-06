@@ -8,19 +8,8 @@
   </head>
   <body>
 
-<script class="js-test-result-template" type="text/html">
-<div class="js-test-result-status js-test-result-status-#{test_result}">
-  <pre>#{function_body}</pre>
-  <pre class="js-test-failure-message">#{failure_message}</pre>
-</div>
-</script>
-<script class="js-test-results-summary-template" type="text/html">
-<div class="js-test-results-summary">
-  <pre>#{successes} Successes, #{failures} Failures</pre>
-</div>
-</script>
-
 <script class="js-test" type="text/html">
+// Time cannot go backwards
 assertThrows(function() {
   advanceToTime(1);
   advanceToTime(0);
@@ -131,51 +120,19 @@ assertEquals(1278377813000, new Date(2010, 6, 5, 17, 56, 53));
 assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
 </script>
 
-<script type="text/javascript" language="JavaScript">
-var assertEquals = function(expected, actual, message) {
-  if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
-};
-
-var assertThrows = function(fn, message) {
-  var threw = false;
-  try { fn(); } catch(_) { threw = true; }
-  if (!threw) { throw(message || ("Expected " + fn + " to have thrown")); }
-};
-
-(function() {
-  var result_template = new Template($$('.js-test-result-template')[0].innerHTML);
-  var summary_template = new Template($$('.js-test-results-summary-template')[0].innerHTML);
-  var failures = [];
-  var successes = [];
-  var body = document.getElementsByTagName('body')[0];
-  
-  document.observe('dom:loaded', function() {
-    $$('.js-test').each(function(t) {
-      var template_env = {
-        function_body: t.innerHTML,
-        test_result: 'success'
-      };
-      
-      try {
-        new Bobble(Date, t.innerHTML);
-        successes.push(t.innerHTML);
-      } catch(e) {
-        template_env.test_result = 'failure';
-        template_env.failure_message = e;
-        failures.push(e);
-      }
-      body.insert(result_template.evaluate(template_env));
-    });
-    
-    body.insert(summary_template.evaluate({
-      failures: failures.length,
-      successes: successes.length
-    }));
-  });
-  
-})();
-
+<script class="js-test-result-template" type="text/html">
+<div class="js-test-result-status js-test-result-status-#{test_result}">
+  <pre>#{function_body}</pre>
+  <pre class="js-test-failure-message">#{failure_message}</pre>
+</div>
 </script>
+<script class="js-test-results-summary-template" type="text/html">
+<div class="js-test-results-summary">
+  <pre>#{successes} Successes, #{failures} Failures</pre>
+</div>
+</script>
+
+<script type="text/javascript" language="JavaScript" src="bobbled-tests-runner.js"></script>
 
   </body>
 </html>
