@@ -1,4 +1,7 @@
+var assertions_count;
+
 function assertEquals(expected, actual, message) {
+  assertions_count++;
   if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
 };
 
@@ -17,18 +20,24 @@ function assertThrows(fn, message) {
   
   document.observe('dom:loaded', function() {
     $$('.js-test').each(function(t) {
-      var template_env = {
-        function_body: t.innerHTML,
-        test_result: 'success'
-      };
+      var failure_message = null;
+      assertions_count = 0;
       
       try {
         new Bobble(t.innerHTML);
-        successes.push(t.innerHTML);
+        if (0 == assertions_count) { failure_message = "No assertions made"; }
       } catch(e) {
+        failure_message = e;
+      }
+      
+      var template_env = { function_body: t.innerHTML };
+      if (failure_message) {
         template_env.test_result = 'failure';
-        template_env.failure_message = e;
-        failures.push(e);
+        template_env.failure_message = failure_message;
+        failures.push(failure_message);
+      } else {
+        template_env.test_result = 'success';
+        successes.push(t);
       }
       body.insert(result_template.evaluate(template_env));
     });
