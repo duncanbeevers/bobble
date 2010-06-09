@@ -8,7 +8,7 @@ function assertEquals(expected, actual, message) {
 function assertThrows(fn, message) {
   var threw = false;
   try { fn(); } catch(_) { threw = true; }
-  if (!threw) { throw(message || ("Expected " + fn + " to have thrown")); }
+  assertEquals(true, threw, message || ("Expected " + fn + " to have thrown"));
 };
 
 (function() {
