@@ -9,21 +9,27 @@ var TestPublicAPI = (function() {
   
   document.observe('dom:loaded', function() {
     $$('.js-test').each(function(t) {
-      var failure_message = null;
+      var result_message = null, failed = false;
       assertions_count = 0;
       
       try {
         new Bobble(t.innerHTML);
-        if (0 == assertions_count) { failure_message = "No assertions made"; }
+        if (0 == assertions_count) {
+          failed = true;
+          result_message = 'No assertions made';
+        }
       } catch(e) {
-        failure_message = e;
+        failed = true;
+        result_message = e;
       }
       
-      var template_env = { function_body: t.innerHTML };
-      if (failure_message) {
+      var template_env = {
+        function_body: t.innerHTML,
+        result_message: (result_message || '') + '\n' + assertions_count + ' Assertions'
+      };
+      if (failed) {
         template_env.test_result = 'failure';
-        template_env.failure_message = failure_message;
-        failures.push(failure_message);
+        failures.push(result_message);
       } else {
         template_env.test_result = 'success';
         successes.push(t);
