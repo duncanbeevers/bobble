@@ -1,19 +1,8 @@
-var assertions_count;
-
-function assertEquals(expected, actual, message) {
-  assertions_count++;
-  if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
-};
-
-function assertThrows(fn, message) {
-  var threw = false;
-  try { fn(); } catch(_) { threw = true; }
-  assertEquals(true, threw, message || ("Expected " + fn + " to have thrown"));
-};
-
-(function() {
+var TestPublicAPI = (function() {
   var result_template = new Template($$('.js-test-result-template')[0].innerHTML);
   var summary_template = new Template($$('.js-test-results-summary-template')[0].innerHTML);
+  
+  var assertions_count;
   var failures = [];
   var successes = [];
   var body = document.getElementsByTagName('body')[0];
@@ -48,4 +37,18 @@ function assertThrows(fn, message) {
     }));
   });
   
+  return {
+    assertEquals: function(expected, actual, message) {
+      assertions_count++;
+      if (expected != actual) { throw(message || ("Expected " + expected + " to equal " + actual)); }
+    },
+    assertThrows: function(fn, message) {
+      var threw = false;
+      try { fn(); } catch(_) { threw = true; }
+      assertEquals(true, threw, message || ("Expected " + fn + " to have thrown"));
+    }
+  };
 })();
+
+var assertEquals = TestPublicAPI.assertEquals;
+var assertThrows = TestPublicAPI.assertThrows;
