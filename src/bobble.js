@@ -4,8 +4,7 @@
 */
 var Bobble = (function(global) {
   return function(src) {
-    
-    var BobblePublicAPI = (function(originalDate, src) {
+    var BobblePublicAPI = (function(originalDate) {
       var bobbleTime = 0;
       var timeouts   = [];
       var intervals  = [];
@@ -64,8 +63,7 @@ var Bobble = (function(global) {
         },
         Date: Date
       };
-    }).apply(this, Array.prototype.splice.call(arguments, 0).concat(global.Date));
-    
+    })(global.Date);
     var setTimeout    = BobblePublicAPI.setTimeout;
     var clearTimeout  = BobblePublicAPI.clearTimeout;
     var setInterval   = BobblePublicAPI.setInterval;
@@ -73,7 +71,6 @@ var Bobble = (function(global) {
     var Date          = BobblePublicAPI.Date;
     var advanceToTime = BobblePublicAPI.advanceToTime;
     var alert = function(s) { console.log("alert: %o", s); };
-    
     eval(src);
   };
-})(window);
+})(this);
