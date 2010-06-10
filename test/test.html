@@ -10,7 +10,7 @@
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // Time cannot go backwards
 assertThrows(function() {
   advanceToTime(1);
@@ -20,7 +20,7 @@ assertThrows(function() {
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // setTimeout does not fire early
 var a = false;
 setTimeout(function() { a = true; }, 100);
@@ -30,7 +30,7 @@ assertEquals(false, a, "Expected setTimeout not to have fired early");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // setTimeout does not fire early relative to current time
 var a = false;
 advanceToTime(50);
@@ -41,7 +41,7 @@ assertEquals(false, a, "Expected setTimeout not to have fired early");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // setTimeout fires relative to current time
 var a = false;
 advanceToTime(50);
@@ -52,7 +52,7 @@ assertEquals(true, a, "Expected setTimeout to have fired after elapsed time");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // setTimeout does not repeat
 var a = false;
 setTimeout( function() { a = true; }, 100);
@@ -65,7 +65,7 @@ assertEquals(false, a, "Expected setTimeout not to have fired again");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // setInterval repeats
 var a = false;
 setInterval( function() { a = true; }, 100);
@@ -78,7 +78,7 @@ assertEquals(true, a, "Expected setInterval to have fired again");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // clearTimeout clears
 var a = false;
 var timeout = setTimeout(function() { a = true; }, 100);
@@ -89,7 +89,7 @@ assertEquals(false, a, "Expected cleared setTimeout not to have fired");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // clearInterval clears
 var a = false;
 var interval = setInterval(function() { a = true; }, 100);
@@ -103,7 +103,7 @@ assertEquals(false, a, "Expected cleared setInterval not to have fired again");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // new Date() is controlled by bobble
 var then = new Date();
 advanceToTime(100);
@@ -113,7 +113,7 @@ assertEquals(100, now - then, "Expected bobble time to control Date");
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // Explicit Date constructor signatures work correctly
 assertEquals(1275785813010, new Date(1275785813010));
 assertEquals(1275785813000, new Date("2010-06-05 17:56:53 GMT-0700 (PDT)"));
@@ -127,7 +127,7 @@ assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // window.setTimeout fires
 var a = false;
 window.setTimeout( function() { a = true; }, 100);
@@ -137,7 +137,7 @@ assertEquals(true, a, "Expected window.setTimeout to have fired after elapsed ti
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // window.setInterval fires
 var a = false;
 window.setInterval( function() { a = true; }, 100);
@@ -147,7 +147,7 @@ assertEquals(true, a, "Expected window.setInterval to have fired after elapsed t
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // window.clearTimeout clears implicit setTimeout
 var a = false;
 var timeout = setTimeout( function() { a = true; }, 100);
@@ -158,7 +158,7 @@ assertEquals(false, a, "Expected window.clearTimeout to have cleared implicit se
 
 
 
-<script class="js-test" type="text/html">
+<script class="js-test" type="text/bobble">
 // window.clearInterval clears implict setInterval
 var a = false;
 var interval = setInterval( function() { a = true; }, 100);
