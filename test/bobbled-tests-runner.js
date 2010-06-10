@@ -7,6 +7,11 @@ var TestPublicAPI = (function() {
   var successes = [];
   var body = document.getElementsByTagName('body')[0];
   
+  function pl(n, s) {
+    return 1 == n ? s : s + (s.match(/(s?)$/)[1] ? 'es' : 's');
+  };
+  function pluralize(n, s) { return n + ' ' + pl(n, s); }
+  
   document.observe('dom:loaded', function() {
     $$('.js-test').each(function(t) {
       var result_message = null, failed = false;
@@ -25,7 +30,7 @@ var TestPublicAPI = (function() {
       
       var template_env = {
         function_body: t.innerHTML,
-        result_message: (result_message || '') + '\n' + assertions_count + ' Assertions'
+        result_message: (result_message || '') + '\n' + pluralize(assertions_count, 'Assertion')
       };
       if (failed) {
         template_env.test_result = 'failure';
@@ -38,8 +43,8 @@ var TestPublicAPI = (function() {
     });
     
     body.insert(summary_template.evaluate({
-      failures: failures.length,
-      successes: successes.length
+      failures_count: pluralize(failures.length, 'Failure'),
+      successes_count: pluralize(successes.length, 'Success')
     }));
   });
   
