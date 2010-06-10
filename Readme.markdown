@@ -5,5 +5,18 @@ Simulated asynch environment for JavaScript
 
 Usage
 -
-* provide evalable script body to new Bobble
-* within bobble body, advance time by calling <tt>advanceToTime()</tt>
+
+Create a new bobble with some asynchronous behavior.
+
+    var bobble = new Bobble("
+      var a = false;
+      setTimeout(function() { a = true; }, 100);
+      advanceToTime(100);
+      console.log(a);
+    ");
+    
+Within the bobble time can be manually advanced using <tt>advanceToTime</tt> to execute scheduled events.
+
+Ask the bobble to execute its payload.
+
+    bobble.run();
