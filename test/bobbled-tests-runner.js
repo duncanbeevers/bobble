@@ -1,6 +1,14 @@
 var TestPublicAPI = (function() {
-  var result_template = new Template($$('.js-test-result-template')[0].innerHTML);
-  var summary_template = new Template($$('.js-test-results-summary-template')[0].innerHTML);
+  var result_template = new Template('                                     \
+  <div class="js-test-result-status js-test-result-status-#{test_result}"> \
+    <pre>#{function_body}</pre>                                            \
+    <pre class="js-test-result-message">#{result_message}</pre>            \
+  </div>');
+  var summary_template = new Template('                                    \
+  <div class="js-test-results-summary">                                    \
+    <pre>#{successes_count}, #{failures_count}</pre>                       \
+  </div>                                                                   \
+  ');
   
   var assertions_count;
   var failures = [];
