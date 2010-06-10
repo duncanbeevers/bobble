@@ -22,11 +22,12 @@ var TestPublicAPI = (function() {
   
   document.observe('dom:loaded', function() {
     $$('.js-test').each(function(t) {
-      var result_message = null, failed = false;
+      var result_message = null, failed = false, bobble;
       assertions_count = 0;
       
       try {
-        new Bobble(t.innerHTML);
+        bobble = new Bobble(t.innerHTML);
+        bobble.run();
         if (0 == assertions_count) {
           failed = true;
           result_message = 'No assertions made';

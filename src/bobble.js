@@ -12,7 +12,7 @@ var Bobble = (function(global) {
       clearInterval: global.clearInterval
     };
     
-    var BobblePublicAPI = (function(global) {
+    var BobbleAPI = (function(global) {
       var bobbleTime = 0;
       var timeouts   = [];
       var intervals  = [];
@@ -56,50 +56,56 @@ var Bobble = (function(global) {
       };
       Date.prototype = { __proto__: originals.Date.prototype, constructor: Date };
       
-      
       return {
-        setTimeout: function(fn, ms) { return tcPsh(timeouts, fn, ms); },
-        setInterval: function(fn, ms) { return tcPsh(intervals, fn, ms); },
-        clearTimeout: function(id) { timeouts[id - 1].fireAgain = false; },
-        clearInterval: function(id) { intervals[id - 1].fireAgain = false; },
-        advanceToTime: function(time) {
-          if (time < bobbleTime) {
-            throw("Can't go back in time");
-          } else {
-            bobbleTime = time;
-            advanceTc(timeouts, false); // timeouts which don't repeat
-            advanceTc(intervals, true); // intervals which do repeat
-          }
+        Native: {
+          setTimeout: function(fn, ms) { return tcPsh(timeouts, fn, ms); },
+          setInterval: function(fn, ms) { return tcPsh(intervals, fn, ms); },
+          clearTimeout: function(id) { timeouts[id - 1].fireAgain = false; },
+          clearInterval: function(id) { intervals[id - 1].fireAgain = false; },
+          Date: Date
         },
-        Date: Date
+        Controls: {
+          advanceToTime: function(time) {
+            if (time < bobbleTime) {
+              throw("Can't go back in time");
+            } else {
+              bobbleTime = time;
+              advanceTc(timeouts, false); // timeouts which don't repeat
+              advanceTc(intervals, true); // intervals which do repeat
+            }
+          }
+        }
       };
     })(global);
     
-    var setTimeout    = BobblePublicAPI.setTimeout;
-    var clearTimeout  = BobblePublicAPI.clearTimeout;
-    var setInterval   = BobblePublicAPI.setInterval;
-    var clearInterval = BobblePublicAPI.clearInterval;
-    var Date          = BobblePublicAPI.Date;
-    var advanceToTime = BobblePublicAPI.advanceToTime;
-    var alert = function(s) { console.log("alert: %o", s); };
-    
-    // Override definitions of functions attached to the global object
-    (function(global) {
-      global.setTimeout    = setTimeout;
-      global.clearTimeout  = clearTimeout;
-      global.setInterval   = setInterval;
-      global.clearInterval = clearInterval;
-      global.Date          = Date;
+    this.run = function() {
+      var setTimeout    = BobbleAPI.Native.setTimeout;
+      var clearTimeout  = BobbleAPI.Native.clearTimeout;
+      var setInterval   = BobbleAPI.Native.setInterval;
+      var clearInterval = BobbleAPI.Native.clearInterval;
+      var Date          = BobbleAPI.Native.Date;
+      var alert = function(s) { console.log("alert: %o", s); };
       
-      eval(src);
-    })(global);
-    
-    
-    // Swap original definitions of global functions back into place
-    global.setTimeout    = originals.setTimeout;
-    global.clearTimeout  = originals.clearTimeout;
-    global.setInterval   = originals.setInterval;
-    global.clearInterval = originals.clearInterval;
-    global.Date          = originals.Date;
+      var advanceToTime = BobbleAPI.Controls.advanceToTime;
+      
+      // Override definitions of functions attached to the global object
+      (function(global) {
+        global.setTimeout    = setTimeout;
+        global.clearTimeout  = clearTimeout;
+        global.setInterval   = setInterval;
+        global.clearInterval = clearInterval;
+        global.Date          = Date;
+        
+        eval(src);
+      })(global);
+      
+      
+      // Swap original definitions of global functions back into place
+      global.setTimeout    = originals.setTimeout;
+      global.clearTimeout  = originals.clearTimeout;
+      global.setInterval   = originals.setInterval;
+      global.clearInterval = originals.clearInterval;
+      global.Date          = originals.Date;
+    };
   };
 })(this);
