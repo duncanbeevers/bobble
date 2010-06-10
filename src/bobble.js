@@ -4,10 +4,19 @@
 */
 var Bobble = (function(global) {
   return function(src) {
-    var BobblePublicAPI = (function(originalDate) {
+    var originals  = {
+      Date: global.Date,
+      setTimeout: global.setTimeout,
+      setInterval: global.setInterval,
+      clearTimeout: global.clearTimeout,
+      clearInterval: global.clearInterval
+    };
+    
+    var BobblePublicAPI = (function(global) {
       var bobbleTime = 0;
       var timeouts   = [];
       var intervals  = [];
+      
       var tcPsh = function(cl, fn, ms) {
         cl.push({
           fn: fn,
@@ -33,19 +42,20 @@ var Bobble = (function(global) {
       var Date = function() {
         var a = arguments, base;
         switch(a.length) {
-          case 0: base = new originalDate(bobbleTime); break;
-          case 1: base = new originalDate(a[0]); break;
-          case 2: base = new originalDate(a[0], a[1]); break;
-          case 3: base = new originalDate(a[0], a[1], a[2]); break;
-          case 4: base = new originalDate(a[0], a[1], a[2], a[3]); break;
-          case 5: base = new originalDate(a[0], a[1], a[2], a[3], a[4]); break;
-          case 6: base = new originalDate(a[0], a[1], a[2], a[3], a[4], a[5]); break;
-          case 7: base = new originalDate(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
+          case 0: base = new originals.Date(bobbleTime); break;
+          case 1: base = new originals.Date(a[0]); break;
+          case 2: base = new originals.Date(a[0], a[1]); break;
+          case 3: base = new originals.Date(a[0], a[1], a[2]); break;
+          case 4: base = new originals.Date(a[0], a[1], a[2], a[3]); break;
+          case 5: base = new originals.Date(a[0], a[1], a[2], a[3], a[4]); break;
+          case 6: base = new originals.Date(a[0], a[1], a[2], a[3], a[4], a[5]); break;
+          case 7: base = new originals.Date(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
         };
         base.__proto__ = Date.prototype;
         return base;
       };
-      Date.prototype = { __proto__: originalDate.prototype, constructor: Date };
+      Date.prototype = { __proto__: originals.Date.prototype, constructor: Date };
+      
       
       return {
         setTimeout: function(fn, ms) { return tcPsh(timeouts, fn, ms); },
@@ -63,7 +73,8 @@ var Bobble = (function(global) {
         },
         Date: Date
       };
-    })(global.Date);
+    })(global);
+    
     var setTimeout    = BobblePublicAPI.setTimeout;
     var clearTimeout  = BobblePublicAPI.clearTimeout;
     var setInterval   = BobblePublicAPI.setInterval;
@@ -71,6 +82,24 @@ var Bobble = (function(global) {
     var Date          = BobblePublicAPI.Date;
     var advanceToTime = BobblePublicAPI.advanceToTime;
     var alert = function(s) { console.log("alert: %o", s); };
-    eval(src);
+    
+    // Override definitions of functions attached to the global object
+    (function(global) {
+      global.setTimeout    = setTimeout;
+      global.clearTimeout  = clearTimeout;
+      global.setInterval   = setInterval;
+      global.clearInterval = clearInterval;
+      global.Date          = Date;
+      
+      eval(src);
+    })(global);
+    
+    
+    // Swap original definitions of global functions back into place
+    global.setTimeout    = originals.setTimeout;
+    global.clearTimeout  = originals.clearTimeout;
+    global.setInterval   = originals.setInterval;
+    global.clearInterval = originals.clearInterval;
+    global.Date          = originals.Date;
   };
 })(this);

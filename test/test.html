@@ -127,6 +127,48 @@ assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
 
 
 
+<script class="js-test" type="text/html">
+// window.setTimeout fires
+var a = false;
+window.setTimeout( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected window.setTimeout to have fired after elapsed time");
+</script>
+
+
+
+<script class="js-test" type="text/html">
+// window.setInterval fires
+var a = false;
+window.setInterval( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected window.setInterval to have fired after elapsed time");
+</script>
+
+
+
+<script class="js-test" type="text/html">
+// window.clearTimeout clears implicit setTimeout
+var a = false;
+var timeout = setTimeout( function() { a = true; }, 100);
+window.clearTimeout(timeout);
+advanceToTime(100);
+assertEquals(false, a, "Expected window.clearTimeout to have cleared implicit setTimeout");
+</script>
+
+
+
+<script class="js-test" type="text/html">
+// window.clearInterval clears implict setInterval
+var a = false;
+var interval = setInterval( function() { a = true; }, 100);
+window.clearInterval(interval);
+advanceToTime(100);
+assertEquals(false, a, "Expected window.clearInterval to have cleared implicit setInterval");
+</script>
+
+
+
   <script class="js-test-result-template" type="text/html">
   <div class="js-test-result-status js-test-result-status-#{test_result}">
     <pre>#{function_body}</pre>
