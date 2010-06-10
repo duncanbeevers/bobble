@@ -71,3 +71,12 @@ var TestPublicAPI = (function() {
 
 var assertEquals = TestPublicAPI.assertEquals;
 var assertThrows = TestPublicAPI.assertThrows;
+
+document.observe('click', function(e) {
+  if (e.element().up('.js-test-results-summary')) {
+    $$('.js-test-result-status').each(
+      function(t){ t.setStyle({ display: 'block' }); }
+    );
+  }
+}
+);
