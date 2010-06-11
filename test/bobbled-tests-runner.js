@@ -58,7 +58,7 @@ var TestPublicAPI = (function() {
   return {
     assertEquals: function(expected, actual, message) {
       assertions_count++;
-      if (expected != actual) { throw(cat(message, ("Expected " + expected + " to equal " + actual))); }
+      if (expected != actual) { throw(cat(message, ("Expected " + expected + ", but was " + actual))); }
     },
     assertThrows: function(fn, message) {
       var threw = false;
