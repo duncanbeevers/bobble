@@ -79,6 +79,16 @@ assertEquals(true, a, "Expected setInterval to have fired again");
 
 
 <script class="js-test" type="text/bobble">
+// setInterval fires once per busy-interval
+var a = 0;
+setInterval( function() { a++; }, 100);
+advanceToTime(400);
+assertEquals(1, a, "Expected setInterval to have fired once");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
 // postMessage does not fire early
 var a = false;
 window.addEventListener('message', function() { a = true; }, false);
