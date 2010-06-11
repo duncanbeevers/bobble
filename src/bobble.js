@@ -5,17 +5,21 @@
 var Bobble = (function(global) {
   return function(src) {
     var originals  = {
-      Date: global.Date,
       setTimeout: global.setTimeout,
       setInterval: global.setInterval,
       clearTimeout: global.clearTimeout,
-      clearInterval: global.clearInterval
+      clearInterval: global.clearInterval,
+      postMessage: global.postMessage,
+      addEventListener: global.addEventListener,
+      Date: global.Date
     };
     
     var BobbleAPI = (function(global) {
-      var bobbleTime = 0;
-      var timeouts   = [];
-      var intervals  = [];
+      var bobbleTime        = 0;
+      var timeouts          = [];
+      var intervals         = [];
+      var posted_messages   = [];
+      var message_receivers = [];
       
       var tcPsh = function(cl, fn, ms) {
         cl.push({
@@ -29,13 +33,23 @@ var Bobble = (function(global) {
       
       function advanceTc(collection, repeat) {
         var tc;
-        for (var i = 0; i < collection.length; i++) {
+        var i = collection.length;
+        while(i--) {
           tc = collection[i];
           if (tc.fireAgain && bobbleTime - tc.lastFired >= tc.ms) {
             tc.fn();
             tc.lastFired = bobbleTime;
             tc.fireAgain = repeat;
           }
+        }
+      };
+      
+      function advanceReceivers(receivers, messages) {
+        var i, message;
+        while(messages.length) {
+          message = messages.pop();
+          i = receivers.length;
+          while(i--) { receivers[i](message); }
         }
       };
       
@@ -62,6 +76,20 @@ var Bobble = (function(global) {
           setInterval: function(fn, ms) { return tcPsh(intervals, fn, ms); },
           clearTimeout: function(id) { timeouts[id - 1].fireAgain = false; },
           clearInterval: function(id) { intervals[id - 1].fireAgain = false; },
+          postMessage: function(data, targetOrigin) {
+            posted_messages.push({
+                data: data,
+                origin: window.location,
+                source: window.location
+              });
+            },
+          addEventListener: function(event, fn, useCapture) {
+            if ('message' == event) {
+              message_receivers.push(fn);
+            } else {
+              originals.addEventListener.apply(originals, arguments);
+            }
+          },
           Date: Date
         },
         Controls: {
@@ -70,6 +98,7 @@ var Bobble = (function(global) {
               throw("Can't go back in time");
             } else {
               bobbleTime = time;
+              advanceReceivers(message_receivers, posted_messages);
               advanceTc(timeouts, false); // timeouts which don't repeat
               advanceTc(intervals, true); // intervals which do repeat
             }
@@ -83,6 +112,7 @@ var Bobble = (function(global) {
       var clearTimeout  = BobbleAPI.Native.clearTimeout;
       var setInterval   = BobbleAPI.Native.setInterval;
       var clearInterval = BobbleAPI.Native.clearInterval;
+      var postMessage   = BobbleAPI.Native.postMessage;
       var Date          = BobbleAPI.Native.Date;
       var alert = function(s) { console.log("alert: %o", s); };
       
@@ -90,11 +120,13 @@ var Bobble = (function(global) {
       
       // Override definitions of functions attached to the global object
       (function(global) {
-        global.setTimeout    = setTimeout;
-        global.clearTimeout  = clearTimeout;
-        global.setInterval   = setInterval;
-        global.clearInterval = clearInterval;
-        global.Date          = Date;
+        global.setTimeout       = setTimeout;
+        global.clearTimeout     = clearTimeout;
+        global.setInterval      = setInterval;
+        global.clearInterval    = clearInterval;
+        global.Date             = Date;
+        global.postMessage      = postMessage;
+        global.addEventListener = BobbleAPI.Native.addEventListener;
         
         eval(src);
       })(global);
@@ -106,6 +138,7 @@ var Bobble = (function(global) {
       global.setInterval   = originals.setInterval;
       global.clearInterval = originals.clearInterval;
       global.Date          = originals.Date;
+      global.postMessage   = originals.postMessage;
     };
   };
 })(this);

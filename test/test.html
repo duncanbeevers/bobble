@@ -79,6 +79,40 @@ assertEquals(true, a, "Expected setInterval to have fired again");
 
 
 <script class="js-test" type="text/bobble">
+// postMessage does not fire early
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+assertEquals(false, a, "Expected postMessage not to have fired");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// postMessage fires
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+advanceToTime(0);
+assertEquals(true, a, "Expected postMessage to have fired");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// postMessage fires once
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+advanceToTime(0);
+a = false;
+advanceToTime(0);
+assertEquals(false, a, "Expected postMessage not to have fired again");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
 // clearTimeout clears
 var a = false;
 var timeout = setTimeout(function() { a = true; }, 100);
