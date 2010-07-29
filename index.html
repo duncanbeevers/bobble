@@ -16,10 +16,9 @@
       }
       a {
         color: #dedede;
-        text-decoration: none;
       }
       .header {
-        margin-top: -60px;
+        margin-top: -86px;
       }
       .hourglass {
         font-size: 4em;
@@ -30,19 +29,29 @@
         margin: 0px;
         display: inline;
       }
+      h2 {
+        font-size: 1em;
+        margin: 0px;
+        padding-bottom: 30px;
+      }
+      h3 {
+        font-size: 0.9em;
+        margin: 0px;
+      }
       div {
         padding-top: 30px;
-        padding-bottom: 30px;
         border-top: 1px solid #60646e;
         border-bottom: 1px solid #21201d;
         text-shadow: rgba(29, 29, 33, 0.699219) 0px 1px 1px;
-        clear: both;
       }
-      code {
-        margin-top: 30px;
+      p {
+        font-size: 0.7em;
+      }
+      pre {
         padding: 10px 10px 13px 10px;
         display: block;
         background-color: #dedede;
+        line-height: 1.7em;
         border-radius: 8px;
         color: #21211d;
         -webkit-box-shadow: 0px -1px 2px rgba(29, 29, 33, 0.699219);
@@ -50,6 +59,16 @@
       .footer {
         font-size: 0.5em;
         padding: 10px;
+      }
+      ul {
+        margin-left: auto;
+        margin-right: auto;
+        list-style-type: none;
+      }
+      li {
+        display: inline;
+        margin-left: 10px;
+        margin-right: 10px;
       }
     </style>
   </head>
@@ -62,31 +81,53 @@
     </div>
     
     <div>
-      Control the flow of time.<br />
-      Let it slip by millisecond by millisecond.
+      <h2>
+        A synchronous environment<br /> for asynchronous tests
+      </h2>
     </div>
     
     <div>
-      Traditional asynch tests can be clunky, and involve the interactions of a number of closures,<br />
-      or manually stopping and starting the test suite.
-      <code>
-        asynchTest("Fails slow", 0, function() {});
-      </code>
+      <h3>Fails Fast</h3>
+      <p>
+        Traditional asynch tests can be clunky, and involve the interactions of a number of closures,
+        or manually stopping and starting the test suite.
+      </p>
+      <pre>
+asynchTest("Fails slow", 0, function() {});</pre>
     </div>
     
     <div>
-      Time does not pass inside the Bobble until we allow it.
-      <code>
-        advanceToTime(10);
-      </code>
+      <h3>Intuitive</h3>
+      <p>
+        Time does not pass inside the Bobble until we allow it.<br />
+        When we advance time, the effects of time's passage are invoked sychronously.
+      </p>
+      <pre>
+var a = false;
+setTimeout(function() { a = true; }, 100);
+advanceToTime(100);</pre>
     </div>
     
     <div>
-      Simple to integrate.
+      <h3>Simple To Integrate</h3>
+      <p>
+        Since Bobbles are self-contained and don't pollute the global JavaScript namespace, it's a
+        simple matter to modify existing test-runners to use them on a per-test basis.
+      </p>
+    </div>
+    
+    <div>
+      <h3>Test-Driven</h3>
+      <p>
+        Check out <a href="http://github.com/duncanbeevers/bobble/blob/master/test/bobble-test.html#L12-213">the tests</a> and the <a href="http://github.com/duncanbeevers/bobble/blob/master/test/bobbled-tests-runner.js#L26-36">test-runner</a> to see how Bobbles work.
+      </p>
     </div>
     
     <div class="footer">
-      <a href="http://www.dweebd.com">Duncan Beevers</a>
+      <ul>
+        <li><a href="http://github.com/duncanbeevers/bobble">View source on GitHub</a></li>
+        <li>by <a href="http://www.dweebd.com">Duncan Beevers</a></li>
+      </ul>
     </div>
     
   </body>
