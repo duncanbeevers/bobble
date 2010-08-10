@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bobble Test</title>
+    <link href="css/test.css" media="screen" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="header">
+      <span class="hourglass"> 
+        &#x231B;
+      </span> 
+      <h1>bobble.js tests</h1>
+    </div>
+    
+    <span id="results"></span>
+
+<script class="js-test" type="text/bobble">
+// Time cannot go backwards
+assertThrows(function() {
+  advanceToTime(1);
+  advanceToTime(0);
+}, "Expected error to have been raised when attempting to rewind time");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setTimeout does not fire early
+var a = false;
+setTimeout(function() { a = true; }, 100);
+advanceToTime(99);
+assertEquals(false, a, "Expected setTimeout not to have fired early");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setTimeout does not fire early relative to current time
+var a = false;
+advanceToTime(50);
+setTimeout( function() { a = true; }, 100);
+advanceToTime(149);
+assertEquals(false, a, "Expected setTimeout not to have fired early");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setTimeout fires relative to current time
+var a = false;
+advanceToTime(50);
+setTimeout( function() { a = true; }, 100);
+advanceToTime(150);
+assertEquals(true, a, "Expected setTimeout to have fired after elapsed time");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setTimeout does not repeat
+var a = false;
+setTimeout( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected setTimeout to have fired once");
+a = false;
+advanceToTime(200);
+assertEquals(false, a, "Expected setTimeout not to have fired again");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setInterval repeats
+var a = false;
+setInterval( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected setInterval to have fired once");
+a = false;
+advanceToTime(200);
+assertEquals(true, a, "Expected setInterval to have fired again");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// setInterval fires once per busy-interval
+var a = 0;
+setInterval( function() { a++; }, 100);
+advanceToTime(400);
+assertEquals(1, a, "Expected setInterval to have fired once");
+advanceToTime(800);
+assertEquals(2, a, "Expected setInterval to have fired twice");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// postMessage does not fire early
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+assertEquals(false, a, "Expected postMessage not to have fired");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// postMessage fires
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+advanceToTime(0);
+assertEquals(true, a, "Expected postMessage to have fired");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// postMessage fires once
+var a = false;
+window.addEventListener('message', function() { a = true; }, false);
+postMessage('message', '*');
+advanceToTime(0);
+a = false;
+advanceToTime(0);
+assertEquals(false, a, "Expected postMessage not to have fired again");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// clearTimeout clears
+var a = false;
+var timeout = setTimeout(function() { a = true; }, 100);
+clearTimeout(timeout);
+advanceToTime(100);
+assertEquals(false, a, "Expected cleared setTimeout not to have fired");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// clearInterval clears
+var a = false;
+var interval = setInterval(function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected setInterval to have fired before clearing");
+a = false;
+clearInterval(interval);
+advanceToTime(200);
+assertEquals(false, a, "Expected cleared setInterval not to have fired again");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// new Date() is controlled by bobble
+var then = new Date();
+advanceToTime(100);
+var now = new Date();
+assertEquals(100, now - then, "Expected bobble time to control Date");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// Explicit Date constructor signatures work correctly
+assertEquals(1275785813010, new Date(1275785813010));
+assertEquals(1275785813000, new Date("2010-06-05 17:56:53 GMT-0700 (PDT)"));
+assertEquals(1277967600000, new Date(2010, 6));
+assertEquals(1278313200000, new Date(2010, 6, 5));
+assertEquals(1278374400000, new Date(2010, 6, 5, 17));
+assertEquals(1278377760000, new Date(2010, 6, 5, 17, 56));
+assertEquals(1278377813000, new Date(2010, 6, 5, 17, 56, 53));
+assertEquals(1278377813010, new Date(2010, 6, 5, 17, 56, 53, 10));
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// window.setTimeout fires
+var a = false;
+window.setTimeout( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected window.setTimeout to have fired after elapsed time");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// window.setInterval fires
+var a = false;
+window.setInterval( function() { a = true; }, 100);
+advanceToTime(100);
+assertEquals(true, a, "Expected window.setInterval to have fired after elapsed time");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// window.clearTimeout clears implicit setTimeout
+var a = false;
+var timeout = setTimeout( function() { a = true; }, 100);
+window.clearTimeout(timeout);
+advanceToTime(100);
+assertEquals(false, a, "Expected window.clearTimeout to have cleared implicit setTimeout");
+</script>
+
+
+
+<script class="js-test" type="text/bobble">
+// window.clearInterval clears implict setInterval
+var a = false;
+var interval = setInterval( function() { a = true; }, 100);
+window.clearInterval(interval);
+advanceToTime(100);
+assertEquals(false, a, "Expected window.clearInterval to have cleared implicit setInterval");
+</script>
+
+
+
+  <script type="text/javascript" language="JavaScript" src="js/bobble.js"></script>
+  <script type="text/javascript" language="JavaScript" src="js/prototype.js"></script>
+  <script type="text/javascript" language="JavaScript" src="js/bobbled-tests-runner.js"></script>
+  
+    <div class="footer"> 
+      <ul> 
+        <li><a href="http://github.com/duncanbeevers/bobble">View source on GitHub</a></li> 
+        <li>by <a href="http://www.dweebd.com">Duncan Beevers</a></li> 
+        <li>inspired by <a href="http://www.amazon.com/gp/product/0765308843?ie=UTF8&tag=duncanbeevers-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0765308843">Marooned in Realtime</a></li> 
+      </ul> 
+    </div>
+  </body>
+</html>
