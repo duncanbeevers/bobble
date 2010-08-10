@@ -1,18 +1,18 @@
 var TestPublicAPI = (function() {
   var result_template = new Template('                                     \
   <div class="js-test-result-status js-test-result-status-#{test_result}"> \
-    <pre>#{function_body}</pre>                                            \
+    <pre class="js-test-body">#{function_body}</pre>                       \
     <pre class="js-test-result-message">#{result_message}</pre>            \
   </div>');
   var summary_template = new Template('                                    \
   <div class="js-test-results-summary">                                    \
-    <pre>#{successes_count}, #{failures_count}</pre>                       \
+    <h2>#{successes_count}, #{failures_count}</h2>                         \
   </div>');
   
   var assertions_count;
   var failures = [];
   var successes = [];
-  var body = document.getElementsByTagName('body')[0];
+  var results_container = $('results');
   
   function pl(n, s) { return 1 == n ? s : s + (s.match(/(s?)$/)[1] ? 'es' : 's'); };
   function pluralize(n, s) { return n + ' ' + pl(n, s); }
@@ -46,10 +46,10 @@ var TestPublicAPI = (function() {
         template_env.test_result = 'success';
         successes.push(t);
       }
-      body.insert(result_template.evaluate(template_env));
+      results_container.insert(result_template.evaluate(template_env));
     });
     
-    body.insert(summary_template.evaluate({
+    results_container.insert(summary_template.evaluate({
       failures_count: pluralize(failures.length, 'Failure'),
       successes_count: pluralize(successes.length, 'Success')
     }));
@@ -70,11 +70,3 @@ var TestPublicAPI = (function() {
 
 var assertEquals = TestPublicAPI.assertEquals;
 var assertThrows = TestPublicAPI.assertThrows;
-
-document.observe('click', function(e) {
-  if (e.element().up('.js-test-results-summary')) {
-    $$('.js-test-result-status').each(
-      function(t){ t.setStyle({ display: 'block' }); }
-    );
-  }
-});

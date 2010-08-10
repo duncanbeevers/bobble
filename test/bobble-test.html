@@ -3,11 +3,16 @@
   <head>
     <title>Bobble Test</title>
     <link href="test.css" media="screen" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" language="JavaScript" src="../src/bobble.js"></script>
   </head>
   <body>
-
-
+    <div class="header">
+      <span class="hourglass"> 
+        &#x231B;
+      </span> 
+      <h1>bobble.js tests</h1>
+    </div>
+    
+    <span id="results"></span>
 
 <script class="js-test" type="text/bobble">
 // Time cannot go backwards
@@ -214,8 +219,16 @@ assertEquals(false, a, "Expected window.clearInterval to have cleared implicit s
 
 
 
+  <script type="text/javascript" language="JavaScript" src="../src/bobble.js"></script>
   <script type="text/javascript" language="JavaScript" src="prototype.js"></script>
   <script type="text/javascript" language="JavaScript" src="bobbled-tests-runner.js"></script>
   
+    <div class="footer"> 
+      <ul> 
+        <li><a href="http://github.com/duncanbeevers/bobble">View source on GitHub</a></li> 
+        <li>by <a href="http://www.dweebd.com">Duncan Beevers</a></li> 
+        <li>inspired by <a href="http://www.amazon.com/gp/product/0765308843?ie=UTF8&tag=duncanbeevers-20&linkCode=as2&camp=1789&creative=390957&creativeASIN=0765308843">Marooned in Realtime</a></li> 
+      </ul> 
+    </div>
   </body>
 </html>
