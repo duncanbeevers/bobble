@@ -49,10 +49,10 @@ var TestPublicAPI = (function() {
       results_container.insert(result_template.evaluate(template_env));
     });
     
-    results_container.insert(summary_template.evaluate({
+    results_container.insert({ top: summary_template.evaluate({
       failures_count: pluralize(failures.length, 'Failure'),
       successes_count: pluralize(successes.length, 'Success')
-    }));
+    })});
   });
   
   return {
